@@ -135,65 +135,65 @@
     jsr !do_down+
     jmp !read_stick2-
                                                     //    
-!:  cmp #109                        				// down with fire button
+!:  cmp #109                                        // down with fire button
     bne !+
     jsr !do_down+
     jmp !read_stick2-
                                                     //
-!:  cmp #123                        				// left
+!:  cmp #123                                        // left
     bne !+
     jsr !do_left+
     jmp !read_stick2-
                                                     //    
-!:  cmp #107                        				// left with fire button    
+!:  cmp #107                                        // left with fire button    
     bne !+  
     jsr !do_left+
     jmp !read_stick2-
                                                     //        
-!:  cmp #119                        				// right
+!:  cmp #119                                        // right
     bne !+
     jsr !do_right+
     jmp !read_stick2-
                                                     //    
-!:  cmp #103                        				// right with fire button   
+!:  cmp #103                                        // right with fire button   
     bne !+  
     jsr !do_right+
     jmp !read_stick2-
                                                     //     
-!:  cmp #122                        				// up left
+!:  cmp #122                                        // up left
     bne !+
     jsr !do_up_left+
     jmp !read_stick2-
                                                     //    
-!:  cmp #106                        				// up left with fire button
+!:  cmp #106                                        // up left with fire button
     bne !+
     jsr !do_up_left+
     jmp !read_stick2-
                                                     //    
-!:  cmp #118                        				// up right
+!:  cmp #118                                        // up right
     bne !+
     jsr !do_up_right+   
     jmp !read_stick2-   
                                                     //        
-!:  cmp #102                        				// up right with fire button
+!:  cmp #102                                        // up right with fire button
     bne !+
     jsr !do_up_right+
     jmp !read_stick2-
                                                     //    
-!:  cmp #121                        				// down left
+!:  cmp #121                                        // down left
     bne !+
     jsr !do_down_left+
     jmp !read_stick2-
-!:  cmp #105                        				// down left with fire button
+!:  cmp #105                                        // down left with fire button
     bne !+
     jsr !do_down_left+
     jmp !read_stick2-
                                                     //    
-!:  cmp #117                        				// down right
+!:  cmp #117                                        // down right
     bne !+
     jsr !do_down_right+
     jmp !read_stick2-
-!:  cmp #101                        				// down right with fire button
+!:  cmp #101                                        // down right with fire button
     bne !+
     jsr !do_down_right+
     jmp !read_stick2-   
@@ -359,7 +359,7 @@ jmp !read_stick2-
     lda #0
     sta TIMER1  
                                                     //
-    												//jsr !wait_for_ready_to_receive+       
+                                                    //jsr !wait_for_ready_to_receive+       
     lda #254                                        // Load number #230 (to check if the esp32 is connected)
     sta $de00                                       // write the byte to IO1    
     jmp !exit+                                                                                      
@@ -376,8 +376,8 @@ jmp !read_stick2-
     displayText(text_connected,19, 27)                                                  
     rts
 !exit: 
-    lda #83                         				// Load 'S'
-    sta $de00                       				// write the byte to IO1
+    lda #83                                         // Load 'S'
+    sta $de00                                       // write the byte to IO1
     rts
                                                     //
 //=========================================================================================================
