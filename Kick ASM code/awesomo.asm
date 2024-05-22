@@ -1,14 +1,14 @@
 // Usefull pages:
 // Relaunch64: https://github.com/sjPlot/Relaunch64/releases
 // Kick assembler 5.25: http://theweb.dk/KickAssembler/Main.html#frontpage
-// Kick assembler 5.90: https://csdb.dk/release/?id=180813 (I use the java8 version)
+// Kick assembler 5.90: https://csdb.dk/release/?id=180813 (I use the java8 version). www.bartvenneker.nl/C64/KickAssembler_Java8.zip
 // Vice emulator: https://vice-emu.sourceforge.io/windows.html
 // Memory Map: https://www.c64-wiki.com/wiki/File:Memory_Map.png
-// Zero page: https://sta.c64.org/cbm64mem.html
-// Kernal screen functions: https://sta.c64.org/cbm64scrfunc.html
-// Kernal functions: https://sta.c64.org/cbm64krnfunc.html
-// Screen codes: https://sta.c64.org/cbm64scr.html
-// Petscii codes: https://sta.c64.org/cbm64pet.html
+// Zero page: www.bartvenneker.nl/C64/Mem_map.html
+// Kernal screen functions: www.bartvenneker.nl/C64/kernal_screen.html
+// Kernal functions: www.bartvenneker.nl/C64/kernal.html
+// Screen codes: www.bartvenneker.nl/C64/Screen_codes.html
+// Petscii codes: www.bartvenneker.nl/C64/Petscii_codes.html
 // PETSCII Editor: https://petscii.krissz.hu/ 
 //
 *=$0800 "BASIC Start"            // location to put a 1 line basic program so we can just
