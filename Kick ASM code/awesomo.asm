@@ -1,3 +1,16 @@
+// Usefull pages:
+// Relaunch64: https://github.com/sjPlot/Relaunch64/releases
+// Kick assembler 5.25: http://theweb.dk/KickAssembler/Main.html#frontpage
+// Kick assembler 5.90: https://csdb.dk/release/?id=180813 (I use the java8 version)
+// Vice emulator: https://vice-emu.sourceforge.io/windows.html
+// Memory Map: https://www.c64-wiki.com/wiki/File:Memory_Map.png
+// Zero page: https://sta.c64.org/cbm64mem.html
+// Kernal screen functions: https://sta.c64.org/cbm64scrfunc.html
+// Kernal functions: https://sta.c64.org/cbm64krnfunc.html
+// Screen codes: https://sta.c64.org/cbm64scr.html
+// Petscii codes: https://sta.c64.org/cbm64pet.html
+// PETSCII Editor: https://petscii.krissz.hu/ 
+//
 *=$0800 "BASIC Start"            // location to put a 1 line basic program so we can just
         .byte $00                // first byte of basic memory should be a zero
         .byte $0E, $08           // Forward address to next basic line
@@ -6,8 +19,8 @@
         .text " (2064)"
         .byte $00, $00, $00      // end of basic program (addr $080E from above)
 
-*=$0810                                             //
-!main_init:                                         //
+*=$0810  "Program"                                  //
+!init:                                              //
 
     lda #1                                          // Load 1 into accumulator
     sta $d021                                       // Set white screen
@@ -28,13 +41,14 @@
     sta TIMER1
     sta RXFULL
     sta RXINDEX
-      
+
+!main:  
 !draw_playfield:
-    displayText(text_border1,2,2)                   // use the displayText macro to draw the top line of the play field
+    displayText(text_border1,2,2)                   // use the displayText macro to draw the horizontal top line of the play field
     displayText(text_border3,20,2)                  // use the displayText macro to draw the bottom line of the play field
 
     ldx #2                                          // start our index at 2, because we start at line 2   
-!drawloop:                                          // Draw all lines in between the top and bottom of the play field
+!drawloop:                                          // Draw all vertical lines in between the top and bottom of the play field
     lda #2                                          //
     sta $f8                                         // store the column number ( also 2) in $f8
     inx                                             // increase x
@@ -91,7 +105,7 @@
     lda #$00                                        //
     sta $d010                                       //   
                                                     // set sprite pointers
-    lda #$3e                                        // my sprite data starts at $0f80, devide that by $40 = $3e
+    lda #$39                                        // my sprite data starts at $0e80, devide that by $40 = $3a
     sta $07F8                                       //
 
 !main_loop:                                         // start of the main loop
@@ -119,86 +133,57 @@
     bne !+                                          // middle position with fire button 
     jsr !sound+
     jmp !read_stick2-   
-                                                    //    
-!:  cmp #126                                        // up
-    bne !+
-    jsr !do_up+ 
-    jmp !read_stick2-
+
+
+!:  and #15                                         // AND operation on accumulator with 00001111. This is to ignore the fire button    
+
+    cmp #14                                         // up
+    bne !+                                          // if not equal, branche to the next label !:
+    jsr !do_up+                                     // process up
+    jmp !read_stick2-                               // jump back to read joystick.
                                                     //     
-!:  cmp #110                                        // up with fire button
-    bne !+
-    jsr !do_up+
-    jmp !read_stick2-
                                                     //        
-!:  cmp #125                                        // down
-    bne !+
-    jsr !do_down+
-    jmp !read_stick2-
+!:  cmp #13                                         // down
+    bne !+                                          //
+    jsr !do_down+                                   //
+    jmp !read_stick2-                               //
                                                     //    
-!:  cmp #109                                        // down with fire button
-    bne !+
-    jsr !do_down+
-    jmp !read_stick2-
                                                     //
-!:  cmp #123                                        // left
-    bne !+
-    jsr !do_left+
-    jmp !read_stick2-
+!:  cmp #11                                         // left
+    bne !+                                          //
+    jsr !do_left+                                   //
+    jmp !read_stick2-                               //
                                                     //    
-!:  cmp #107                                        // left with fire button    
-    bne !+  
-    jsr !do_left+
-    jmp !read_stick2-
                                                     //        
-!:  cmp #119                                        // right
-    bne !+
-    jsr !do_right+
-    jmp !read_stick2-
+!:  cmp #7                                          // right
+    bne !+                                          //
+    jsr !do_right+                                  //
+    jmp !read_stick2-                               //
                                                     //    
-!:  cmp #103                                        // right with fire button   
-    bne !+  
-    jsr !do_right+
-    jmp !read_stick2-
                                                     //     
-!:  cmp #122                                        // up left
-    bne !+
-    jsr !do_up_left+
-    jmp !read_stick2-
+!:  cmp #10                                         // up left
+    bne !+                                          //
+    jsr !do_up_left+                                //
+    jmp !read_stick2-                               //
                                                     //    
-!:  cmp #106                                        // up left with fire button
-    bne !+
-    jsr !do_up_left+
-    jmp !read_stick2-
-                                                    //    
-!:  cmp #118                                        // up right
-    bne !+
-    jsr !do_up_right+   
-    jmp !read_stick2-   
+   
+!:  cmp #6                                          // up right
+    bne !+                                          //
+    jsr !do_up_right+                               //
+    jmp !read_stick2-                               //
                                                     //        
-!:  cmp #102                                        // up right with fire button
-    bne !+
-    jsr !do_up_right+
-    jmp !read_stick2-
-                                                    //    
-!:  cmp #121                                        // down left
-    bne !+
-    jsr !do_down_left+
-    jmp !read_stick2-
-!:  cmp #105                                        // down left with fire button
-    bne !+
-    jsr !do_down_left+
-    jmp !read_stick2-
-                                                    //    
-!:  cmp #117                                        // down right
-    bne !+
-    jsr !do_down_right+
-    jmp !read_stick2-
-!:  cmp #101                                        // down right with fire button
-    bne !+
-    jsr !do_down_right+
-    jmp !read_stick2-   
+!:  cmp #9                                          // down left
+    bne !+                                          //
+    jsr !do_down_left+                              //
+    jmp !read_stick2-                               //
+
+!:  cmp #5                                          // down right
+    bne !+                                          //
+    jsr !do_down_right+                             //
+    jmp !read_stick2-                               //
+
 !:
-jmp !read_stick2-
+jmp !read_stick2-                                   //
                                                     //    
     
 !sound:
@@ -207,21 +192,19 @@ jmp !read_stick2-
     lda #255                                        //
     sta DELAY                                       //
     jsr !delay+                                     //
-    lda #32
-    sta $400
-    rts
+    rts                                             //
     
-!do_up:         
+!do_up:                                             //
     lda #70                                         // Load 'F'
     sta $de00                                       // write the byte to IO1
-    jsr !color_up+      
-    lda #0 ; sta $fe
-    jsr !color_down+
-    jsr !color_left+
-    jsr !color_right+
-    lda #1; sta $fe 
-    jsr !sprite_up+
-    rts
+    jsr !color_up+                                  // Color the up arrow in green
+    lda #0 ; sta $fe                                // load color black in $fe
+    jsr !color_down+                                // color other arrows black
+    jsr !color_left+                                // 
+    jsr !color_right+                               //
+    lda #1; sta $fe                                 // set the default back to one for next round (green arrow)
+    jsr !sprite_up+                                 // move the sprite up
+    rts                                             //
 
 !do_up_left:        
     lda #71                                         // Load 'G'
@@ -347,7 +330,7 @@ jmp !read_stick2-
     bne !result+
                                                     //    
     lda #$fb
-  !wait:
+!wait:
     cmp $d012    
     bne !wait-
                                                     //    
@@ -358,8 +341,7 @@ jmp !read_stick2-
     
     lda #0
     sta TIMER1  
-                                                    //
-                                                    //jsr !wait_for_ready_to_receive+       
+                                                    //       
     lda #254                                        // Load number #230 (to check if the esp32 is connected)
     sta $de00                                       // write the byte to IO1    
     jmp !exit+                                                                                      
@@ -606,10 +588,18 @@ jmp !readbuffer-                                    // and jump back to read the
     sta ($c3),y
 !exit:                                              //  
     rts                                             // return to sender ;-)
-    
+
+
+*=$0e40 "Sprite Data" 
+sprite1:    .byte $02, $AA, $80, $02, $AA, $80, $02, $69, $80, $02, $69, $80, $02, $AA, $80, $02, $AA, $80, $02, $AA, $80
+            .byte $00, $28, $00, $2A, $AA, $A8, $AA, $AA, $AA, $AA, $AA, $AA, $8B, $77, $62, $8B, $77, $62, $8A, $AA, $A0
+            .byte $8A, $AA, $A0, $0A, $AA, $A0, $0A, $AA, $A0, $2A, $AA, $A8, $2A, $AA, $A8, $2A, $AA, $A8, $28, $00, $28
+            .byte 0    
+            
 //=========================================================================================================
 // CONSTANTS
 //=========================================================================================================
+*=*  "Constants"
 text_border1:                       .byte 144,79 ,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,119,80 ,128
 text_border2:                       .byte 144,101,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,32 ,106,128
 text_border3:                       .byte 144,76 ,111,111,111,111,111,111,111,111,111,111,111,111,111,111,111,111,111,111,111,111,111,111,122,128
@@ -635,19 +625,14 @@ screen_lines_low:                   .byte $00,$28,$50,$78,$A0,$C8,$F0,$18,$40,$6
 screen_lines_high:                  .byte $04,$04,$04,$04,$04,$04,$04,$05,$05,$05,$05,$05,$05,$06,$06,$06,$06,$06,$06,$06,$07,$07,$07,07,$07
 color_lines_high:                   .byte $d8,$d8,$d8,$d8,$d8,$d8,$d8,$d9,$d9,$d9,$d9,$d9,$d9,$da,$da,$da,$da,$da,$da,$da,$db,$db,$db,$db,$db
 
-*=$0f80 "Sprite Data"
-sprite1:    .byte $02, $AA, $80, $02, $AA, $80, $02, $69, $80, $02, $69, $80, $02, $AA, $80, $02, $AA, $80, $02, $AA, $80
-            .byte $00, $28, $00, $2A, $AA, $A8, $AA, $AA, $AA, $AA, $AA, $AA, $8B, $77, $62, $8B, $77, $62, $8A, $AA, $A0
-            .byte $8A, $AA, $A0, $0A, $AA, $A0, $0A, $AA, $A0, $2A, $AA, $A8, $2A, $AA, $A8, $2A, $AA, $A8, $28, $00, $28
-            .byte 0
+
+
 
 
 //=========================================================================================================
 // VARIABLE BUFFERS
 //=========================================================================================================
 .segment Variables [start=$6000, max=$7fff, virtual]
-//* = $1300 virtual
-HOME_LINE:                          .byte 0         // the start line of the text input box
 RXINDEX:                            .byte 0         // index for when we recieve data
 RXFULL:                             .byte 0         // indicator if the buffer contains a complete message
 RXBUFFER:                           .fill 256,128   // reserved space for incoming data
